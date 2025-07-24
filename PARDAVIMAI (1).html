@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8">
+  <title>Prekių įkėlimas</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f2f2f2; max-width: 700px; margin: auto; }
+    input, textarea { width: 100%; margin: 10px 0; padding: 10px; }
+    .product { background: white; padding: 15px; margin: 15px 0; border-radius: 8px; box-shadow: 0 0 5px #aaa; }
+    .product img { max-width: 150px; display: block; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <h2>Įkelk prekę</h2>
+  <form id="form">
+    <input type="text" id="title" placeholder="Pavadinimas" required>
+    <textarea id="desc" placeholder="Aprašymas" required></textarea>
+    <input type="number" id="price" placeholder="Kaina (€)" required>
+    <input type="file" id="img" accept="image/*">
+    <button type="submit">Įkelti</button>
+  </form>
+
+  <div id="list"></div>
+
+  <script>
+    const form = document.getElementById("form");
+    const list = document.getElementById("list");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById("title").value;
+      const desc = document.getElementById("desc").value;
+      const price = document.getElementById("price").value;
+      const file = document.getElementById("img").files[0];
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const url = reader.result;
+        const div = document.createElement("div");
+        div.className = "product";
+        div.innerHTML = `<h3>${title}</h3><p>${desc}</p><p>Kaina: ${price} €</p>` + (file ? `<img src="${url}">` : "");
+        list.prepend(div);
+        form.reset();
+      };
+      if (file) reader.readAsDataURL(file);
+      else reader.onload();
+    });
+  </script>
+
+</body>
+</html>
